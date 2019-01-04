@@ -252,6 +252,10 @@ void ScenarioManager::Update(const common::TrajectoryPoint& ego_point,
         !FLAGS_enable_scenario_stop_sign_unprotected) {
       continue;
     }
+    if (scenario == ScenarioConfig::TRAFFIC_LIGHT_RIGHT_TURN_UNPROTECTED &&
+        !FLAGS_enable_scenario_traffic_light_right_turn_unprotected) {
+      continue;
+    }
     if (SelectScenario(scenario, ego_point, frame)) {
       AINFO << "select transferable scenario: "
             << ScenarioConfig::ScenarioType_Name(scenario);

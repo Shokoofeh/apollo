@@ -13,6 +13,7 @@ cc_binary(
         "//modules/common/adapters:adapter_gflags",
         "//modules/common/util",
         "//modules/prediction/proto:prediction_proto",
+        "//modules/perception/proto:perception_proto",
     ],
 )
 

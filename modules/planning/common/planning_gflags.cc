@@ -31,19 +31,19 @@ DEFINE_bool(enable_collision_detection, false,
 // scenario related
 DEFINE_string(
     scenario_lane_follow_config_file,
-    "/apollo/modules/planning/conf/scenario_lane_follow_config.pb.txt",
+    "/apollo/modules/planning/conf/scenario/lane_follow_config.pb.txt",
     "The lane follow scenario configuration file");
 DEFINE_string(scenario_side_pass_config_file,
-              "/apollo/modules/planning/conf/scenario_side_pass_config.pb.txt",
+              "/apollo/modules/planning/conf/scenario/side_pass_config.pb.txt",
               "side pass scenario configuration file");
 DEFINE_string(scenario_stop_sign_unprotected_config_file,
               "/apollo/modules/planning/conf/"
-              "scenario_stop_sign_unprotected_config.pb.txt",
+              "scenario/stop_sign_unprotected_config.pb.txt",
               "stop_sign_unprotected scenario configuration file");
-DEFINE_string(scenario_traffic_light_right_turn_unprotected_config_file,
+DEFINE_string(scenario_traffic_light_unprotected_right_turn_config_file,
               "/apollo/modules/planning/conf/"
-              "scenario_traffic_light_right_turn_unprotected_config.pb.txt",
-              "scenario_traffic_light_right_turn_unprotected config file");
+              "scenario/traffic_light_unprotected_right_turn_config.pb.txt",
+              "scenario_traffic_light_unprotected_right_turn config file");
 
 DEFINE_bool(enable_scenario_side_pass, true,
             "enable side pass scenario in planning");
@@ -56,7 +56,7 @@ DEFINE_bool(enable_scenario_side_pass_multiple_parked_obstacles, true,
 
 DEFINE_bool(enable_scenario_stop_sign_unprotected, true,
             "enable stop_sign_unprotected scenario in planning");
-DEFINE_bool(enable_scenario_traffic_light_right_turn_unprotected, false,
+DEFINE_bool(enable_scenario_traffic_light_unprotected_right_turn, false,
             "enable traffic_light_right_turn_unprotected scenario in planning");
 
 DEFINE_string(traffic_rule_config_filename,

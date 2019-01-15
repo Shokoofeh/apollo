@@ -19,15 +19,14 @@
 #include "modules/map/hdmap/hdmap_util.h"
 #include "modules/planning/common/planning_context.h"
 #include "modules/planning/common/planning_gflags.h"
-#include "modules/planning/scenarios/stage.h"
-#include "modules/planning/scenarios/stop_sign/stop_sign_unprotected/stop_sign_unprotected_scenario.h"
+#include "modules/planning/scenarios/stop_sign/unprotected/stop_sign_unprotected_scenario.h"
 #include "modules/planning/integration_tests/planning_test_base.h"
 
 namespace apollo {
 namespace planning {
 
 using apollo::common::time::Clock;
-using apollo::planning::scenario::stop_sign::StopSignUnprotectedContext;
+
 
 /**
  * @class SunnyvaleBigLoopTest
@@ -55,7 +54,7 @@ class SunnyvaleBigLoopTest : public PlanningTestBase {
 
     FLAGS_enable_scenario_side_pass = false;
     FLAGS_enable_scenario_stop_sign_unprotected = false;
-    FLAGS_enable_scenario_traffic_light_right_turn_unprotected = false;
+    FLAGS_enable_scenario_traffic_light_unprotected_right_turn = false;
     FLAGS_enable_rss_info = false;
 
     ENABLE_RULE(TrafficRuleConfig::CROSSWALK, false);

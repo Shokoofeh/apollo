@@ -147,7 +147,7 @@ bool PredictionComponent::Init() {
     common::util::Split(FLAGS_prediction_offline_bags, ':', &inputs);
     for (const auto& input : inputs) {
       std::vector<std::string> offline_bags;
-      GetDataFileNames(boost::filesystem::path(input), &offline_bags);
+      GetRecordFileNames(boost::filesystem::path(input), &offline_bags);
       std::sort(offline_bags.begin(), offline_bags.end());
       AINFO << "For input " << input << ", found " << offline_bags.size()
             << "  rosbags to process";
@@ -249,18 +249,34 @@ void PredictionComponent::OnPerception(
   }
   auto end_time6 = std::chrono::system_clock::now();
 
+  // Insert features to FeatureOutput for offline_mode
+  if (FLAGS_prediction_offline_mode) {
+    for (const int id :
+        ptr_obstacles_container->curr_frame_predictable_obstacle_ids()) {
+      Obstacle* obstacle_ptr = ptr_obstacles_container->GetObstacle(id);
+      if (obstacle_ptr == nullptr) {
+        AERROR << "Null obstacle found.";
+        continue;
+      } else if (!obstacle_ptr->latest_feature().IsInitialized()) {
+        AERROR << "Obstacle [" << id << "] has no latest feature.";
+        return;
+      }
+      FeatureOutput::Insert(obstacle_ptr->latest_feature());
+      ADEBUG << "Insert feature into feature output";
+    }
+    // Not doing evaluation on offline mode
+    return;
+  }
+
   // Make evaluations
-  EvaluatorManager::Instance()->Run(perception_msg);
+  EvaluatorManager::Instance()->Run();
   auto end_time7 = std::chrono::system_clock::now();
   diff = end_time7 - end_time6;
   ADEBUG << "Time to evaluate: "
         << diff.count() * 1000 << " msec.";
 
   // Make predictions
-  if (FLAGS_prediction_offline_mode) {
-    return;
-  }
-  PredictorManager::Instance()->Run(perception_msg);
+  PredictorManager::Instance()->Run();
   auto end_time8 = std::chrono::system_clock::now();
   diff = end_time8 - end_time7;
   ADEBUG << "Time to predict: "
@@ -277,6 +293,8 @@ void PredictionComponent::OnPerception(
       perception_msg.header().camera_timestamp());
   prediction_obstacles.mutable_header()->set_radar_timestamp(
       perception_msg.header().radar_timestamp());
+
+  prediction_obstacles.set_perception_error_code(perception_msg.error_code());
 
   if (FLAGS_prediction_test_mode) {
     for (auto const& prediction_obstacle :

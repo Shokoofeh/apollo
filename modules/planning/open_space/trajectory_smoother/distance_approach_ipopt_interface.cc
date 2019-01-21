@@ -1322,6 +1322,7 @@ void DistanceApproachIPOPTInterface::finalize_solution(
   // 3. sampling time variables, 1 * [0, horizon_]
   // 4. dual_l obstacles_edges_sum_ * [0, horizon]
   // 5. dual_n obstacles_num * [0, horizon]
+  #pragma omp parallel num_threads(4)
   for (int i = 0; i < horizon_; ++i) {
     state_result_(0, i) = x[state_index];
     state_result_(1, i) = x[state_index + 1];

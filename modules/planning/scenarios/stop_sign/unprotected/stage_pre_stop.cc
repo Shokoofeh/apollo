@@ -73,8 +73,7 @@ Stage::StageStatus StagePreStop::Process(
                      return overlap.object_id == stop_sign_overlap_id;
                    });
   if (stop_sign_overlap_it == stop_sign_overlaps.end()) {
-    next_stage_ = ScenarioConfig::NO_STAGE;
-    return Stage::FINISHED;
+    return FinishScenario();
   }
 
   const double adc_front_edge_s = reference_line_info.AdcSlBoundary().end_s();
@@ -192,12 +191,14 @@ int StagePreStop::AddWatchVehicle(const Obstacle& obstacle,
   const double stop_line_s = over_lap_info->lane_overlap_info().start_s();
   const double obstacle_end_s = obstacle_s + perception_obstacle.length() / 2;
   const double distance_to_stop_line = stop_line_s - obstacle_end_s;
-  if (distance_to_stop_line >
+
+  if (distance_to_stop_line < 0 ||
       scenario_config_.watch_vehicle_max_valid_stop_distance()) {
     ADEBUG << "obstacle_id[" << obstacle_id << "] type[" << obstacle_type_name
            << "] distance_to_stop_line[" << distance_to_stop_line
            << "]; stop_line_s" << stop_line_s << "]; obstacle_end_s["
-           << obstacle_end_s << "] too far from stop line. skip";
+           << obstacle_end_s
+           << "] too far from stop line or pass stop line. skip";
     return -1;
   }
 

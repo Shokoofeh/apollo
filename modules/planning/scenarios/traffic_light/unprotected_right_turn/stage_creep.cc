@@ -71,8 +71,7 @@ Stage::StageStatus StageCreep::Process(
                      return overlap.object_id == traffic_light_overlap_id;
                    });
   if (traffic_light_overlap_it == traffic_light_overlaps.end()) {
-    next_stage_ = ScenarioConfig::NO_STAGE;
-    return Stage::FINISHED;
+    return FinishScenario();
   }
 
   // check on traffic light color
@@ -84,10 +83,10 @@ Stage::StageStatus StageCreep::Process(
   const double wait_time =
       Clock::NowInSeconds() - GetContext()->creep_start_time;
   const double timeout = scenario_config_.creep_timeout();
-  if (dynamic_cast<DeciderCreep*>(FindTask(TaskConfig::DECIDER_CREEP))
-          ->CheckCreepDone(*frame, reference_line_info,
-                           traffic_light_overlap_it->end_s,
-                           wait_time, timeout)) {
+  auto *task = dynamic_cast<DeciderCreep*>(FindTask(TaskConfig::DECIDER_CREEP));
+  if (task && task->CheckCreepDone(*frame, reference_line_info,
+                                   traffic_light_overlap_it->end_s,
+                                   wait_time, timeout)) {
     return FinishStage();
   }
 
